@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>グルメダイニング</title>
+  <link rel="apple-touch-icon" href="https://manus-storage-test.oss-cn-beijing.aliyuncs.com/manusfile/agent-generated/d0c4d2e5-3a0e-4c0f-8b1e-9f2a3b4c5d6e.png">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .phone-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      max-height: 90vh;
+      background: #1c1c1e;
+      border-radius: 55px;
+      padding: 12px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #FFF8F0;
+      border-radius: 44px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 34px;
+      background: #1c1c1e;
+      border-radius: 0 0 24px 24px;
+      z-index: 100;
+    }
+    
+    .status-bar {
+      height: 47px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 28px 0;
+      font-size: 14px;
+      font-weight: 600;
+      background: #FFF8F0;
+    }
+    
+    .app-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      padding-bottom: 80px;
+    }
+    
+    .tab-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 83px;
+      background: #FFF8F0;
+      border-top: 1px solid #E8DDD0;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      padding-top: 8px;
+      border-radius: 0 0 44px 44px;
+    }
+    
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      color: #8B7355;
+      font-size: 10px;
+      padding: 4px 12px;
+      border: none;
+      background: none;
+    }
+    
+    .tab-item.active { color: #C4A574; }
+    .tab-item .material-icons { font-size: 24px; margin-bottom: 2px; }
+    
+    .screen { display: none; }
+    .screen.active { display: block; }
+    
+    /* Home Screen */
+    .logo-section {
+      text-align: center;
+      padding: 20px 0;
+    }
+    
+    .logo-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      margin-bottom: 12px;
+    }
+    
+    .app-name {
+      font-size: 24px;
+      font-weight: bold;
+      color: #5D4E37;
+    }
+    
+    .app-tagline {
+      color: #8B7355;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+    
+    .info-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 16px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .info-card h3 {
+      font-size: 16px;
+      color: #5D4E37;
+      margin-bottom: 12px;
+    }
+    
+    .info-row {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      color: #5D4E37;
+      font-size: 14px;
+    }
+    
+    .info-row .material-icons {
+      margin-right: 12px;
+      color: #C4A574;
+      font-size: 20px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #5D4E37;
+      margin: 24px 0 12px;
+    }
+    
+    .menu-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    
+    .menu-card {
+      min-width: 160px;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .menu-card img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+    }
+    
+    .menu-card-content {
+      padding: 12px;
+    }
+    
+    .menu-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #5D4E37;
+    }
+    
+    .menu-card-desc {
+      font-size: 11px;
+      color: #8B7355;
+      margin-top: 4px;
+    }
+    
+    .menu-card-price {
+      font-size: 14px;
+      font-weight: bold;
+      color: #C4A574;
+      margin-top: 8px;
+    }
+    
+    /* Menu Screen */
+    .category-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+    }
+    
+    .category-tab {
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid #E8DDD0;
+      color: #8B7355;
+      font-size: 14px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    
+    .category-tab.active {
+      background: #C4A574;
+      color: #fff;
+      border-color: #C4A574;
+    }
+    
+    .menu-list-item {
+      display: flex;
+      background: #fff;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .menu-list-item img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+    }
+    
+    .menu-list-content {
+      flex: 1;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .menu-list-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #5D4E37;
+    }
+    
+    .menu-list-desc {
+      font-size: 12px;
+      color: #8B7355;
+      margin-top: 4px;
+    }
+    
+    .menu-list-price {
+      font-size: 16px;
+      font-weight: bold;
+      color: #C4A574;
+    }
+    
+    /* Points Screen */
+    .points-card {
+      background: linear-gradient(135deg, #C4A574 0%, #8B7355 100%);
+      border-radius: 16px;
+      padding: 24px;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    
+    .points-label {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .points-value {
+      font-size: 48px;
+      font-weight: bold;
+      display: flex;
+      align-items: baseline;
+    }
+    
+    .points-unit {
+      font-size: 20px;
+      margin-left: 4px;
+    }
+    
+    .points-next {
+      margin-top: 16px;
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    
+    .progress-bar {
+      height: 6px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 3px;
+      margin-top: 8px;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: #fff;
+      border-radius: 3px;
+      width: 62.5%;
+    }
+    
+    .qr-section {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .qr-title {
+      color: #C4A574;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    
+    .qr-code {
+      width: 120px;
+      height: 120px;
+      background: #f0f0f0;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+    }
+    
+    .qr-code .material-icons {
+      font-size: 80px;
+      color: #5D4E37;
+    }
+    
+    .qr-hint {
+      color: #8B7355;
+      font-size: 12px;
+      margin-top: 12px;
+    }
+    
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    
+    .benefit-icon {
+      width: 40px;
+      height: 40px;
+      background: #FFF8F0;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+    }
+    
+    .benefit-icon .material-icons {
+      color: #C4A574;
+    }
+    
+    .benefit-info {
+      flex: 1;
+    }
+    
+    .benefit-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #5D4E37;
+    }
+    
+    .benefit-points {
+      font-size: 14px;
+      font-weight: bold;
+      color: #C4A574;
+    }
+    
+    /* Reservation Screen */
+    .calendar-section {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    
+    .calendar-month {
+      font-size: 18px;
+      font-weight: 600;
+      color: #5D4E37;
+    }
+    
+    .calendar-nav {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .calendar-nav button {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid #E8DDD0;
+      background: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 12px;
+      color: #8B7355;
+      margin-bottom: 8px;
+    }
+    
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #5D4E37;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    .calendar-day.selected {
+      background: #C4A574;
+      color: #fff;
+    }
+    
+    .calendar-day.disabled {
+      color: #ccc;
+      cursor: default;
+    }
+    
+    .time-section, .guests-section {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .section-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #5D4E37;
+      margin-bottom: 12px;
+    }
+    
+    .time-slots {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    
+    .time-slot {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #E8DDD0;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #5D4E37;
+      cursor: pointer;
+    }
+    
+    .time-slot.selected {
+      background: #C4A574;
+      color: #fff;
+      border-color: #C4A574;
+    }
+    
+    .guests-selector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+    
+    .guests-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid #E8DDD0;
+      background: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .guests-count {
+      font-size: 32px;
+      font-weight: bold;
+      color: #5D4E37;
+    }
+    
+    .guests-label {
+      font-size: 14px;
+      color: #8B7355;
+    }
+    
+    .reserve-btn {
+      width: 100%;
+      padding: 16px;
+      background: #C4A574;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+    
+    /* More Screen */
+    .contact-form {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    .form-label {
+      font-size: 14px;
+      color: #5D4E37;
+      margin-bottom: 8px;
+      display: block;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #E8DDD0;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    
+    .form-textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #E8DDD0;
+      border-radius: 8px;
+      font-size: 14px;
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: #C4A574;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .admin-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: #5D4E37;
+      color: #fff;
+      border-radius: 12px;
+      text-decoration: none;
+      margin-top: 24px;
+    }
+    
+    .admin-link .material-icons {
+      margin-right: 8px;
+    }
+    
+    .app-title-text {
+      text-align: center;
+      color: #fff;
+      margin-top: 16px;
+      font-size: 18px;
+    }
+    
+    .app-subtitle-text {
+      text-align: center;
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+    
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 5px;
+      background: #000;
+      border-radius: 3px;
+      z-index: 100;
+    }
+    
+    @media (max-width: 420px) {
+      body { background: #FFF8F0; }
+      .phone-wrapper { padding: 0; }
+      .phone-frame { 
+        width: 100%; 
+        height: 100vh; 
+        max-height: none;
+        border-radius: 0; 
+        padding: 0; 
+        box-shadow: none;
+      }
+      .phone-screen { border-radius: 0; }
+      .notch, .home-indicator { display: none; }
+      .status-bar { padding-top: 8px; height: 40px; }
+      .tab-bar { border-radius: 0; }
+      .app-title-text, .app-subtitle-text { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-wrapper">
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="notch"></div>
+        <div class="status-bar">
+          <span id="status-time">9:41</span>
+          <span>
+            <span class="material-icons" style="font-size:16px">signal_cellular_alt</span>
+            <span class="material-icons" style="font-size:16px">wifi</span>
+            <span class="material-icons" style="font-size:16px">battery_full</span>
+          </span>
+        </div>
+        
+        <div class="app-content">
+          <!-- Home Screen -->
+          <div id="screen-home" class="screen active">
+            <div class="logo-section">
+              <img src="https://manus-storage-test.oss-cn-beijing.aliyuncs.com/manusfile/agent-generated/d0c4d2e5-3a0e-4c0f-8b1e-9f2a3b4c5d6e.png" alt="Logo" class="logo-img">
+              <div class="app-name">グルメダイニング</div>
+              <div class="app-tagline">ようこそ、おいしい時間をお過ごしください</div>
+            </div>
+            
+            <div class="info-card">
+              <h3>店舗情報</h3>
+              <div class="info-row">
+                <span class="material-icons">schedule</span>
+                営業時間: 11:00 - 22:00
+              </div>
+              <div class="info-row">
+                <span class="material-icons">location_on</span>
+                東京都渋谷区〇〇1-2-3
+              </div>
+              <div class="info-row">
+                <span class="material-icons">phone</span>
+                03-1234-5678
+              </div>
+            </div>
+            
+            <div class="section-title">本日のおすすめ</div>
+            <div class="menu-scroll">
+              <div class="menu-card">
+                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=200&fit=crop" alt="パスタ">
+                <div class="menu-card-content">
+                  <div class="menu-card-title">本日のおすすめパスタ</div>
+                  <div class="menu-card-desc">季節の野菜を使った特製クリームパスタ</div>
+                  <div class="menu-card-price">¥1,480</div>
+                </div>
+              </div>
+              <div class="menu-card">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&h=200&fit=crop" alt="ステーキ">
+                <div class="menu-card-content">
+                  <div class="menu-card-title">シェフ特製ステーキ</div>
+                  <div class="menu-card-desc">厳選された黒毛和牛のグリル</div>
+                  <div class="menu-card-price">¥2,980</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Menu Screen -->
+          <div id="screen-menu" class="screen">
+            <h2 style="color:#5D4E37;margin-bottom:16px;">メニュー</h2>
+            <div class="category-tabs">
+              <button class="category-tab active">前菜</button>
+              <button class="category-tab">メイン</button>
+              <button class="category-tab">デザート</button>
+              <button class="category-tab">ドリンク</button>
+            </div>
+            
+            <div class="menu-list-item">
+              <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=200&h=200&fit=crop" alt="サラダ">
+              <div class="menu-list-content">
+                <div>
+                  <div class="menu-list-title">シーザーサラダ</div>
+                  <div class="menu-list-desc">新鮮なロメインレタスとパルメザンチーズ</div>
+                </div>
+                <div class="menu-list-price">¥780</div>
+              </div>
+            </div>
+            
+            <div class="menu-list-item">
+              <img src="https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=200&h=200&fit=crop" alt="スープ">
+              <div class="menu-list-content">
+                <div>
+                  <div class="menu-list-title">本日のスープ</div>
+                  <div class="menu-list-desc">シェフ特製の季節のスープ</div>
+                </div>
+                <div class="menu-list-price">¥580</div>
+              </div>
+            </div>
+            
+            <div class="menu-list-item">
+              <img src="https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=200&h=200&fit=crop" alt="カルパッチョ">
+              <div class="menu-list-content">
+                <div>
+                  <div class="menu-list-title">鮮魚のカルパッチョ</div>
+                  <div class="menu-list-desc">本日の新鮮な魚介を使用</div>
+                </div>
+                <div class="menu-list-price">¥1,280</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Points Screen -->
+          <div id="screen-points" class="screen">
+            <h2 style="color:#5D4E37;margin-bottom:16px;">ポイントカード</h2>
+            
+            <div class="points-card">
+              <div class="points-label">現在のポイント</div>
+              <div class="points-value">
+                1,250<span class="points-unit">pt</span>
+                <span class="material-icons" style="margin-left:auto;font-size:32px;">star</span>
+              </div>
+              <div class="points-next">
+                次の特典まで <strong>750pt</strong>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill"></div>
+              </div>
+              <div style="font-size:12px;margin-top:8px;">前菜盛り合わせ無料</div>
+            </div>
+            
+            <div class="qr-section">
+              <div class="qr-title">会員QRコード</div>
+              <div class="qr-code">
+                <span class="material-icons">qr_code_2</span>
+              </div>
+              <div class="qr-hint">お会計時にこちらのQRコードを<br>スタッフにご提示ください</div>
+            </div>
+            
+            <div class="section-title">特典一覧</div>
+            <div class="benefit-item">
+              <div class="benefit-icon">
+                <span class="material-icons">cake</span>
+              </div>
+              <div class="benefit-info">
+                <div class="benefit-name">デザート1品無料</div>
+              </div>
+              <div class="benefit-points">500pt</div>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-icon">
+                <span class="material-icons">local_bar</span>
+              </div>
+              <div class="benefit-info">
+                <div class="benefit-name">ドリンク1杯無料</div>
+              </div>
+              <div class="benefit-points">300pt</div>
+            </div>
+          </div>
+          
+          <!-- Reservation Screen -->
+          <div id="screen-reservation" class="screen">
+            <h2 style="color:#5D4E37;margin-bottom:16px;">予約</h2>
+            
+            <div class="calendar-section">
+              <div class="calendar-header">
+                <span class="calendar-month">2024年12月</span>
+                <div class="calendar-nav">
+                  <button><span class="material-icons" style="font-size:18px;">chevron_left</span></button>
+                  <button><span class="material-icons" style="font-size:18px;">chevron_right</span></button>
+                </div>
+              </div>
+              <div class="calendar-weekdays">
+                <span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span>
+              </div>
+              <div class="calendar-days">
+                <span class="calendar-day disabled">1</span>
+                <span class="calendar-day disabled">2</span>
+                <span class="calendar-day disabled">3</span>
+                <span class="calendar-day disabled">4</span>
+                <span class="calendar-day disabled">5</span>
+                <span class="calendar-day disabled">6</span>
+                <span class="calendar-day disabled">7</span>
+                <span class="calendar-day">8</span>
+                <span class="calendar-day">9</span>
+                <span class="calendar-day">10</span>
+                <span class="calendar-day">11</span>
+                <span class="calendar-day">12</span>
+                <span class="calendar-day">13</span>
+                <span class="calendar-day selected">14</span>
+                <span class="calendar-day">15</span>
+                <span class="calendar-day">16</span>
+                <span class="calendar-day">17</span>
+                <span class="calendar-day">18</span>
+                <span class="calendar-day">19</span>
+                <span class="calendar-day">20</span>
+                <span class="calendar-day">21</span>
+              </div>
+            </div>
+            
+            <div class="time-section">
+              <div class="section-label">時間帯</div>
+              <div class="time-slots">
+                <div class="time-slot">11:00</div>
+                <div class="time-slot">12:00</div>
+                <div class="time-slot">13:00</div>
+                <div class="time-slot">17:00</div>
+                <div class="time-slot selected">18:00</div>
+                <div class="time-slot">19:00</div>
+                <div class="time-slot">20:00</div>
+                <div class="time-slot">21:00</div>
+              </div>
+            </div>
+            
+            <div class="guests-section">
+              <div class="section-label">人数</div>
+              <div class="guests-selector">
+                <button class="guests-btn">−</button>
+                <div style="text-align:center;">
+                  <div class="guests-count">2</div>
+                  <div class="guests-label">名様</div>
+                </div>
+                <button class="guests-btn">+</button>
+              </div>
+            </div>
+            
+            <button class="reserve-btn">予約する</button>
+          </div>
+          
+          <!-- More Screen -->
+          <div id="screen-more" class="screen">
+            <h2 style="color:#5D4E37;margin-bottom:16px;">その他</h2>
+            
+            <div class="info-card">
+              <h3>店舗情報</h3>
+              <div class="info-row">
+                <span class="material-icons">location_on</span>
+                東京都渋谷区〇〇1-2-3
+              </div>
+              <div class="info-row">
+                <span class="material-icons">phone</span>
+                03-1234-5678
+              </div>
+              <div class="info-row">
+                <span class="material-icons">schedule</span>
+                11:00 - 22:00（定休日: 毎週火曜日）
+              </div>
+            </div>
+            
+            <div class="section-title">お問い合わせ</div>
+            <div class="contact-form">
+              <div class="form-group">
+                <label class="form-label">お名前</label>
+                <input type="text" class="form-input" placeholder="山田 太郎">
+              </div>
+              <div class="form-group">
+                <label class="form-label">メールアドレス</label>
+                <input type="email" class="form-input" placeholder="example@email.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">お問い合わせ内容</label>
+                <textarea class="form-textarea" placeholder="お問い合わせ内容をご記入ください"></textarea>
+              </div>
+              <button class="submit-btn">送信する</button>
+            </div>
+            
+            <a href="#" class="admin-link" onclick="alert('管理画面は実際のアプリでご利用いただけます')">
+              <span class="material-icons">settings</span>
+              管理画面
+            </a>
+          </div>
+        </div>
+        
+        <div class="tab-bar">
+          <button class="tab-item active" onclick="showScreen('home')">
+            <span class="material-icons">home</span>
+            ホーム
+          </button>
+          <button class="tab-item" onclick="showScreen('menu')">
+            <span class="material-icons">restaurant_menu</span>
+            メニュー
+          </button>
+          <button class="tab-item" onclick="showScreen('points')">
+            <span class="material-icons">card_giftcard</span>
+            ポイント
+          </button>
+          <button class="tab-item" onclick="showScreen('reservation')">
+            <span class="material-icons">event</span>
+            予約
+          </button>
+          <button class="tab-item" onclick="showScreen('more')">
+            <span class="material-icons">more_horiz</span>
+            その他
+          </button>
+        </div>
+        
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+    <p class="app-title-text">グルメダイニング</p>
+    <p class="app-subtitle-text">飲食店アプリ サンプル</p>
+  </div>
+  
+  <script>
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+      document.getElementById('screen-' + screenId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+    
+    function updateTime() {
+      const now = new Date();
+      const h = now.getHours();
+      const m = now.getMinutes().toString().padStart(2, '0');
+      document.getElementById('status-time').textContent = h + ':' + m;
+    }
+    updateTime();
+    setInterval(updateTime, 60000);
+  </script>
+</body>
+</html>
